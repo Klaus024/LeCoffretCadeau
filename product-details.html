@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="Logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails du Produit - Le Coffret Cadeau</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8a5a7d;
+            --secondary: #d9c5b2;
+            --light: #f8f4f0;
+            --dark: #4a3a40;
+            --accent: #b48e8e;
+            --text: #3d2b2f;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --info: #17a2b8;
+            --danger: #dc3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: var(--light);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .back-to-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .back-to-home:hover {
+            color: var(--primary);
+            transform: translateX(-5px);
+        }
+
+        .back-to-home i {
+            font-size: 1.2rem;
+        }
+
+        .product-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .product-gallery {
+            position: relative;
+        }
+
+        .like-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .like-button i {
+            color: var(--accent);
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .like-button:hover {
+            transform: scale(1.1);
+        }
+
+        .like-button.liked i {
+            color: var(--danger);
+            animation: heartBeat 0.3s ease-in-out;
+        } 
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .product-stats {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--light);
+            border-radius: 8px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--dark);
+        }
+
+        .stat-item i {
+            color: var(--accent);
+        }
+
+        .main-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .thumbnail-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .thumbnail {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .thumbnail:hover {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-title {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .product-price {
+            font-size: 1.8rem;
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .product-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .product-meta {
+            margin-bottom: 30px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .meta-icon {
+            color: var(--accent);
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .action-buttons {
+            display: grid;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+            border: 2px solid var(--accent);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--light);
+            color: var(--dark);
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .quantity-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .quantity-input {
+            width: 60px;
+            height: 40px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .related-products {
+            margin-top: 60px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin-bottom: 30px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .related-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .related-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .related-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .related-info {
+            padding: 15px;
+        }
+
+        .related-title {
+            font-size: 1.1rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .related-price {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .product-details {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding: 0;
+                margin: 0;
+                background: none;
+                box-shadow: none;
+                border-radius: 0;
+            }
+            .product-details > div {
+                width: 100%;
+                max-width: 100vw;
+                margin: 0;
+                padding: 0;
+                background: none;
+            }
+            .main-image {
+                width: 100vw;
+                min-width: 100vw;
+                max-width: 100vw;
+                height: 55vw;
+                min-height: 220px;
+                max-height: 60vh;
+                object-fit: contain;
+                background: #fff;
+                border-radius: 0;
+                margin: 0;
+                display: block;
+                position: relative;
+                left: 50%;
+                right: 50%;
+                transform: translateX(-50%);
+                box-shadow: none;
+            }
+            .product-info {
+                padding: 18px 8px 18px 8px;
+                background: #fff;
+                border-radius: 0 0 18px 18px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+                margin: 0;
+                width: 100%;
+                max-width: 480px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .btn {
+                width: 100%;
+                box-sizing: border-box;
+                margin-bottom: 8px;
+            }
+            .action-buttons {
+                gap: 8px;
+            }
+            .section-title {
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+            .related-products {
+                margin-top: 24px;
+                padding-left: 6px;
+                padding-right: 6px;
+            }
+        }
+        @media (max-width: 480px) {
+            .main-image {
+                width: 100vw; /* Utilise 100% de la largeur de la fenêtre */
+                height: auto; /* Ajuste la hauteur automatiquement pour garder les proportions */
+                min-height: 140px;
+                max-height: 55vh; /* Vous pouvez ajuster cette valeur */
+                border-radius: 0; /* Enlève les coins arrondis pour un affichage pleine largeur */
+                object-fit: cover; /* Assure que l'image couvre tout l'espace sans se déformer */
+                background: transparent !important;
+            }
+            .product-info {
+                padding: 12px 2px 12px 2px;
+                border-radius: 0 0 12px 12px;
+                max-width: 100vw;
+            }
+            .btn {
+                font-size: 0.95rem;
+                padding: 10px 8px;
+            }
+            .section-title {
+                font-size: 1.1rem;
+                padding-left: 4px;
+                padding-right: 4px;
+            }
+            .related-products {
+                padding-left: 2px;
+                padding-right: 2px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      @keyframes slideInRight {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes slideOutRight {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-to-home">
+            <i class="fas fa-arrow-left"></i>
+            Retour
+        </a>
+        <div class="product-details">
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <img src="" alt="" class="main-image" id="main-image">
+                <div class="thumbnail-grid" id="thumbnail-grid" style="margin-top: 18px;"></div>
+            </div>
+            <div class="product-info" style="flex: 1;">
+                <h1 class="product-title" id="productTitle"></h1>
+                <div class="product-price" id="productPrice"></div>
+                <div class="product-meta"> 
+                    <div class="meta-item">
+                        <i class="fas fa-box meta-icon"></i>
+                        <span>En stock</span>
+                    </div>
+                </div>
+                <p class="product-description" id="productDescription"></p>
+                <div class="quantity-selector">
+                    <button class="quantity-btn" id="decreaseQuantity">-</button>
+                    <input type="number" class="quantity-input" id="quantityInput" value="1" min="1">
+                    <button class="quantity-btn" id="increaseQuantity">+</button>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="addToCartBtn">
+                        <i class="fas fa-shopping-cart"></i> Ajouter au panier
+                    </button>
+                    <a href="https://wa.me/22891323090" class="btn btn-secondary" id="whatsappBtn">
+                        <i class="fab fa-whatsapp"></i> Commander via WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="related-products">
+            <h2 class="section-title">Produits similaires</h2>
+            <div class="related-grid" id="relatedProducts">
+                <!-- Les produits similaires seront ajoutés ici dynamiquement -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+    import { supabase } from './config.js';
+
+    // Récupérer l'ID du produit depuis l'URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+
+    let currentProduct = null;
+    let quantity = 1;
+
+    // Charger les détails du produit
+    async function loadProductDetails() {
+      const { data: product, error } = await supabase.from('products').select('*').eq('id', productId).single();
+      if (error || !product) {
+        showError('Produit non trouvé');
+        return;
+      }
+      currentProduct = product;
+      displayProductDetails();
+      loadProductStats();
+      loadRelatedProducts();
+    }
+
+    // Charger les statistiques du produit (likes, vues)
+    async function loadProductStats() {
+      // Suppression de la logique de vues
+    }
+
+    // Afficher les détails du produit
+    function displayProductDetails() {
+      document.getElementById('productTitle').textContent = currentProduct.name;
+      document.getElementById('productPrice').textContent = currentProduct.price.toLocaleString() + ' FCFA';
+      // Nettoyer la description de tout code JS parasite
+      let desc = currentProduct.description || '';
+      if(desc.includes('console.log')) desc = '';
+      document.getElementById('productDescription').textContent = desc;
+      // Image principale
+      const mainImage = document.getElementById('main-image');
+      let mainImg = currentProduct.image_url;
+      if (!mainImg) {
+        mainImg = currentProduct.image_url_1 || currentProduct.image_url_2 || currentProduct.image_url_3 || currentProduct.image_url_4 || '';
+      }
+      mainImage.src = mainImg;
+      mainImage.alt = currentProduct.name;
+      // Miniatures (images secondaires)
+      const thumbnailGrid = document.getElementById('thumbnail-grid');
+      const images = [currentProduct.image_url_1, currentProduct.image_url_2, currentProduct.image_url_3, currentProduct.image_url_4].filter(Boolean);
+      thumbnailGrid.innerHTML = images.map((img, idx) => `<img src="${img}" alt="Miniature ${idx+1}" class="thumbnail" onclick="changeMainImage('${img}')">`).join('');
+    }
+
+    // Charger les produits similaires
+    async function loadRelatedProducts() {
+      const { data: products } = await supabase.from('products').select('*').eq('category_id', currentProduct.category_id).neq('id', productId).limit(4);
+      const relatedGrid = document.getElementById('relatedProducts');
+      if (!products || products.length === 0) {
+        relatedGrid.innerHTML = '<p style="text-align: center; color: #666;">Aucun produit similaire trouvé dans cette catégorie.</p>';
+      } else {
+        relatedGrid.innerHTML = products.map(product => `
+          <a href="product-details.html?id=${product.id}" class="related-card" style="text-decoration: none; color: inherit;">
+            <img src="${product.image_url}" alt="${product.name}" class="related-image">
+            <div class="related-info">
+              <h3 class="related-title">${product.name}</h3>
+              <div class="related-price">${product.price.toLocaleString()} FCFA</div>
+            </div>
+          </a>
+        `).join('');
+      }
+    }
+
+    // Changer l'image principale
+    window.changeMainImage = function(src) {
+      document.getElementById('main-image').src = src;
+    };
+
+    // Gérer la quantité
+    document.getElementById('decreaseQuantity').addEventListener('click', () => {
+      const quantityInput = document.getElementById('quantityInput');
+      quantity = Math.max(1, parseInt(quantityInput.value) || 1) - 1;
+      quantityInput.value = quantity;
+    });
+    document.getElementById('increaseQuantity').addEventListener('click', () => {
+      const quantityInput = document.getElementById('quantityInput');
+      quantity = Math.max(1, parseInt(quantityInput.value) || 1) + 1;
+      quantityInput.value = quantity;
+    });
+    document.getElementById('quantityInput').addEventListener('change', (e) => {
+      quantity = Math.max(1, parseInt(e.target.value) || 1);
+      e.target.value = quantity;
+    });
+
+    // Ajouter au panier (localStorage)
+    document.getElementById('addToCartBtn').addEventListener('click', () => {
+      if (currentProduct) {
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        const existingItem = cart.find(item => item.id === currentProduct.id);
+        if (existingItem) {
+          existingItem.quantity += quantity;
+        } else {
+          cart.push({
+            id: currentProduct.id,
+            name: currentProduct.name,
+            price: currentProduct.price,
+            image: currentProduct.image_url,
+            quantity: quantity
+          });
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        showNotification('Produit ajouté au panier!', 'success');
+      }
+    });
+
+    // Commander via WhatsApp (pas d’auth nécessaire)
+    document.getElementById('whatsappBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      if (!currentProduct) return;
+      const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
+      let message = `Bonjour, je souhaite commander :\n`;
+      message += `- ${currentProduct.name} x${quantity} (${currentProduct.price} FCFA)\n`;
+      message += `\nTotal : ${currentProduct.price * quantity} FCFA`;
+      message += `\nMerci de me confirmer la disponibilité.`;
+      const phone = '22891323090';
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    });
+
+    // Afficher une notification moderne
+    function showNotification(message, type = 'success') {
+      // Créer le conteneur s'il n'existe pas
+      let container = document.getElementById('notificationContainer');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'notificationContainer';
+        container.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          z-index: 10000;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        `;
+        document.body.appendChild(container);
+      }
+      
+      const notification = document.createElement('div');
+      
+      // Icônes modernes
+      const icons = {
+        success: '<i class="fas fa-check-circle"></i>',
+        error: '<i class="fas fa-exclamation-circle"></i>',
+        warning: '<i class="fas fa-exclamation-triangle"></i>',
+        info: '<i class="fas fa-info-circle"></i>'
+      };
+      
+      // Couleurs modernes
+      const colors = {
+        success: '#10B981',
+        error: '#EF4444',
+        warning: '#F59E0B',
+        info: '#3B82F6'
+      };
+      
+      notification.style.cssText = `
+        min-width: 320px;
+        max-width: 420px;
+        background: white;
+        color: #1F2937;
+        padding: 16px 20px;
+        border-radius: 12px;
+        font-weight: 500;
+        font-size: 0.95rem;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.12), 0 4px 10px rgba(0,0,0,0.08);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-left: 4px solid ${colors[type]};
+        animation: slideInRight 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        position: relative;
+        overflow: hidden;
+      `;
+      
+      notification.innerHTML = `
+        <div style="color: ${colors[type]}; font-size: 1.2rem; flex-shrink: 0;">${icons[type]}</div>
+        <div style="flex: 1; line-height: 1.4;">${message}</div>
+        <button onclick="this.parentElement.remove()" style="
+          background: none;
+          border: none;
+          color: #9CA3AF;
+          cursor: pointer;
+          padding: 4px;
+          border-radius: 4px;
+          font-size: 1.1rem;
+          transition: color 0.2s;
+          flex-shrink: 0;
+        " onmouseover="this.style.color='#6B7280'" onmouseout="this.style.color='#9CA3AF'">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
+      
+      container.appendChild(notification);
+      
+      // Auto-remove après 4 secondes
+      setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease-in-out';
+        setTimeout(() => {
+          if (notification.parentElement) notification.remove();
+        }, 300);
+      }, 4000);
+    }
+    function showError(message) {
+      showNotification(message, 'danger');
+    }
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', loadProductDetails);
+    </script>
+</body>
+</html> 

@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Coffret Cadeau - Administration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" type="image/png" href="Logo.png">
+    <style>
+        :root {
+            --primary: #8a5a7d;
+            --secondary: #d9c5b2;
+            --light: #f8f4f0;
+            --dark: #4a3a40;
+            --accent: #b48e8e;
+            --text: #3d2b2f;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --info: #17a2b8;
+            --danger: #dc3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: var(--light);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .admin-header {
+            background: var(--dark);
+            color: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            background: var(--accent);
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--primary);
+        }
+
+        .admin-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--dark);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--dark);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        .btn-admin {
+            background: var(--dark);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        .btn-admin:hover {
+            background: var(--accent);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        /* Ajoutez ce style pour le conteneur du tableau */
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            max-width: 100vw;
+        }
+        .admin-table {
+            min-width: 600px;
+        }
+        /* Scrollbar stylée */
+        .table-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .table-container::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+        .table-container::-webkit-scrollbar-track {
+            background: #f8f4f0;
+        }
+        @media (max-width: 768px) {
+            .table-container {
+                max-width: 100vw;
+                padding-bottom: 8px;
+            }
+            .admin-table {
+                font-size: 0.95rem;
+                min-width: 520px;
+            }
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .admin-table th {
+            background: var(--light);
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .action-btn, .edit-btn, .delete-btn, .back-btn, .btn-admin, .cancel-edit {
+            border-radius: 8px;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            transition: background 0.22s, color 0.22s, box-shadow 0.22s;
+            box-shadow: 0 2px 8px rgba(180,142,142,0.06);
+            outline: none;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .delete-btn, .action-btn.delete-btn, button.delete-btn, button[onclick^="delete"] {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            font-size: 15px;
+        }
+        .delete-btn:hover, .action-btn.delete-btn:hover, button.delete-btn:hover, button[onclick^="delete"]:hover {
+            background: #b32d3a;
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(220,53,69,0.10);
+        }
+        .delete-btn i, .action-btn.delete-btn i {
+            margin-right: 6px;
+        }
+        .back-btn, #logoutBtn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            font-size: 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(180,142,142,0.08);
+            transition: background 0.22s, color 0.22s, box-shadow 0.22s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .back-btn:hover, #logoutBtn:hover {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(138,90,125,0.10);
+        }
+        #logoutBtn i {
+            margin-right: 6px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .notification-success {
+            background: var(--success);
+        }
+
+        .notification-error {
+            background: var(--danger);
+        }
+
+        .notification-warning {
+            background: var(--warning);
+        }
+
+        .drop-area {
+            border: 2px dashed var(--accent);
+            border-radius: 12px;
+            padding: 28px 20px;
+            text-align: center;
+            cursor: pointer;
+            background: #faf6f6;
+            color: var(--accent);
+            font-size: 1.08rem;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: border-color 0.3s, background 0.3s, color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 12px rgba(180,142,142,0.06);
+            position: relative;
+            outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 70px;
+        }
+        .drop-area.active {
+            border-color: var(--primary);
+            background: #f3e6f0;
+            color: var(--primary);
+            box-shadow: 0 4px 24px rgba(138,90,125,0.10);
+        }
+        .drop-area::before {
+            content: '\f382'; /* icône FontAwesome fa-cloud-upload-alt */
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            font-size: 2.1rem;
+            color: var(--accent);
+            margin-right: 16px;
+            display: inline-block;
+        }
+        .drop-area.active::before {
+            color: var(--primary);
+        }
+
+        .drop-area img {
+            max-width: 100%;
+            max-height: 150px;
+            margin-top: 10px;
+        }
+        /* Style pour la case d'ajout de l'image principale */
+        .main-image-upload-box {
+            width: 120px;
+            height: 120px;
+            border: 2px dashed var(--accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            background: #faf6f6;
+            overflow: hidden;
+            margin-bottom: 10px;
+            transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 12px rgba(180,142,142,0.06);
+        }
+        .main-image-upload-box.active {
+            border-color: var(--primary);
+            background: #f3e6f0;
+            box-shadow: 0 4px 24px rgba(138,90,125,0.10);
+        }
+        .main-image-upload-box span.plus {
+            color: var(--accent);
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        .main-image-upload-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            display: block;
+        }
+        .main-image-upload-box .delete-btn {
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            color: #fff;
+            background: var(--accent);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(180,142,142,0.10);
+        }
+
+        @media (max-width: 768px) {
+            .admin-table .edit-btn, .admin-table .delete-btn {
+                padding: 10px 12px;
+                font-size: 1.2rem;
+                min-width: 0;
+                width: 38px;
+                height: 38px;
+                justify-content: center;
+                gap: 0;
+            }
+            .admin-table .edit-btn span,
+            .admin-table .delete-btn span {
+                display: none;
+            }
+        }
+        #editModal .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            margin: 50px auto;
+            max-height: 90vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        @media (max-width: 600px) {
+            #editModal .modal-content {
+                width: 98vw;
+                max-width: 99vw;
+                margin: 10px auto;
+                padding: 10px 4px;
+                max-height: 96vh;
+            }
+        }
+        #editModal .modal-content form {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        #editModal .modal-content form > .form-group {
+            flex-shrink: 0;
+        }
+        #editModal .modal-content form > div[style*="display: flex"] {
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1 class="admin-title">Tableau de Bord Administrateur</h1>
+             
+            <button id="logoutBtn" class="back-btn" style="margin-left: 10px;">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </button>
+        </div>
+
+        <div class="admin-section">
+            <h2 class="section-title">Statistiques</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="categoryCount">0</div>
+                    <div class="stat-label">Catégories</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="productCount">0</div>
+                    <div class="stat-label">Produits</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="orderCount">0</div>
+                    <div class="stat-label">Commandes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="satisfaction">0%</div>
+                    <div class="stat-label">Satisfaction</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h2 class="section-title">Ajouter un Produit</h2>
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label for="productName">Nom du produit</label>
+                    <input type="text" id="productName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="productPrice">Prix (FCFA)</label>
+                    <input type="number" id="productPrice" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">Catégorie</label>
+                    <select id="productCategory" class="form-control" required>
+                        <option value="">Sélectionnez une catégorie</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productMainImage">Image principale du produit</label>
+                    <div class="main-image-upload-box" id="mainImageUploadBox">
+                        <span class="plus">+</span>
+                        <input type="file" id="productMainImage" class="form-control" accept="image/*" style="opacity:0;position:absolute;left:0;top:0;width:100%;height:100%;cursor:pointer;" required>
+                    </div>
+                </div>
+                <div class="form-group" id="addImageFormGroup">
+                    <label>Images du produit (max 4, secondaires)</label>
+                    <div id="imageUploadBoxes" style="display:flex;gap:12px;">
+                      <div class="image-upload-box" data-index="0" style="width:90px;height:90px;border:2px dashed #b48e8e;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;background:#faf6f6;overflow:hidden;">
+                        <span style="color:#b48e8e;font-size:2rem;">+</span>
+                        <input type="file" accept="image/*" style="opacity:0;position:absolute;left:0;top:0;width:100%;height:100%;cursor:pointer;" />
+                      </div>
+                      <div class="image-upload-box" data-index="1" style="width:90px;height:90px;border:2px dashed #b48e8e;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;background:#faf6f6;overflow:hidden;">
+                        <span style="color:#b48e8e;font-size:2rem;">+</span>
+                        <input type="file" accept="image/*" style="opacity:0;position:absolute;left:0;top:0;width:100%;height:100%;cursor:pointer;" />
+                      </div>
+                      <div class="image-upload-box" data-index="2" style="width:90px;height:90px;border:2px dashed #b48e8e;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;background:#faf6f6;overflow:hidden;">
+                        <span style="color:#b48e8e;font-size:2rem;">+</span>
+                        <input type="file" accept="image/*" style="opacity:0;position:absolute;left:0;top:0;width:100%;height:100%;cursor:pointer;" />
+                      </div>
+                      <div class="image-upload-box" data-index="3" style="width:90px;height:90px;border:2px dashed #b48e8e;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;background:#faf6f6;overflow:hidden;">
+                        <span style="color:#b48e8e;font-size:2rem;">+</span>
+                        <input type="file" accept="image/*" style="opacity:0;position:absolute;left:0;top:0;width:100%;height:100%;cursor:pointer;" />
+                      </div>
+                    </div>
+                    <div id="imagePreviewContainer" style="display:none;"></div>
+                    <div id="dropArea" class="drop-area">Glisser et déposer jusqu'à 4 images ici ou cliquer sur une case ci-dessus</div>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">Description</label>
+                    <textarea id="productDescription" class="form-control" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn-admin">Ajouter le produit</button>
+            </form>
+        </div>
+
+        <div class="admin-section">
+            <h2 class="section-title">Gestion des Produits</h2>
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Catégorie</th>
+                            <th>Prix</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        <!-- Les produits seront ajoutés ici dynamiquement -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h2 class="section-title">Gestion des Catégories</h2>
+            <form id="addCategoryForm" style="display: flex; gap: 16px; align-items: flex-end; margin-bottom: 24px;">
+                <div class="form-group" style="margin-bottom:0;">
+                    <label for="categoryName">Nom de la catégorie</label>
+                    <input type="text" id="categoryName" class="form-control" required placeholder="Ex: Montre Homme">
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label for="categoryIcon">Icône (FontAwesome)</label>
+                    <input type="text" id="categoryIcon" class="form-control" required placeholder="Ex: fa-clock">
+                </div>
+                <button type="submit" class="btn-admin">Ajouter</button>
+            </form>
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Icône</th>
+                            <th>Nom</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categoriesTableBody">
+                        <!-- Les catégories seront ajoutées ici dynamiquement -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section des commentaires -->
+        <div class="admin-section">
+            <h2 class="section-title">Commentaires et Appréciations</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalReviews">0</div>
+                    <div class="stat-label">Total des avis</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="averageRating">0</div>
+                    <div class="stat-label">Note moyenne</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="positiveReviews">0%</div>
+                    <div class="stat-label">Avis positifs</div>
+                </div>
+            </div>
+            
+            <div class="reviews-list" style="margin-top: 30px;">
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Nom</th>
+                                <th>Email</th>
+                                <th>Note</th>
+                                <th>Commentaire</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reviewsTableBody">
+                            <!-- Les commentaires seront ajoutés ici dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h2 class="section-title">Commandes</h2>
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Total</th>
+                            <th>Statut</th>
+                            <th>Produits</th>
+                            <th>Modifier Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- Dynamique -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Modal de modification -->
+        <div id="editModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+            <div class="modal-content" style="background: white; padding: 20px; border-radius: 8px; width: 90%; max-width: 500px; margin: 50px auto;">
+                <h3 style="margin-bottom: 20px;">Modifier le produit</h3>
+                <form id="editProductForm">
+                    <input type="hidden" id="editProductId">
+                    <div class="form-group">
+                        <label for="editProductName">Nom du produit</label>
+                        <input type="text" id="editProductName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductPrice">Prix (FCFA)</label>
+                        <input type="number" id="editProductPrice" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductCategory">Catégorie</label>
+                        <select id="editProductCategory" class="form-control" required>
+                            <option value="">Sélectionnez une catégorie</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductMainImage">Image principale du produit</label>
+                        <div class="image-upload-box" data-index="main" style="width:90px;height:90px;border:2px dashed #b48e8e;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;background:#faf6f6;overflow:hidden;">
+                            <span style="color:#b48e8e;font-size:2rem;">+</span>
+                            <input type="file" accept="image/*" id="editProductMainImage" style="opacity:0;position:absolute;left:0;top:0;width:100%;height:100%;cursor:pointer;" />
+                            <img id="editMainImagePreview" src="#" alt="Aperçu principale" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1;" />
+                            <button type="button" class="delete-btn" id="editMainDeleteBtn" style="display:none;position:absolute;top:4px;right:4px;z-index:2;"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group" id="editImageFormGroup">
+                        <label>Images secondaires du produit (max 4)</label>
+                        <div id="editImageUploadBoxes" style="display:flex;gap:12px;">
+                          <div class="image-upload-box" data-index="0" style="width:90px;height:90px;border:2px dashed #b48e8e;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;background:#faf6f6;overflow:hidden;">
+                            <span style="color:#b48e8e;font-size:2rem;">+</span>
+                            <input type="file" accept="image/*" id="editImageInput0" style="opacity:0;position:absolute;left:0;top:0;width:100%;height:100%;cursor:pointer;" />
+                            <img id="editImagePreview0" src="#" alt="Aperçu 1" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1;" />
+                            <button type="button" class="delete-btn" id="editDeleteBtn0" style="display:none;position:absolute;top:4px;right:4px;z-index:2;"><i class="fas fa-times"></i></button>
+                          </div>
+                          <div class="image-upload-box" data-index="1" style="width:90px;height:90px;border:2px dashed #b48e8e;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;background:#faf6f6;overflow:hidden;">
+                            <span style="color:#b48e8e;font-size:2rem;">+</span>
+                            <input type="file" accept="image/*" id="editImageInput1" style="opacity:0;position:absolute;left:0;top:0;width:100%;height:100%;cursor:pointer;" />
+                            <img id="editImagePreview1" src="#" alt="Aperçu 2" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1;" />
+                            <button type="button" class="delete-btn" id="editDeleteBtn1" style="display:none;position:absolute;top:4px;right:4px;z-index:2;"><i class="fas fa-times"></i></button>
+                          </div>
+                          <div class="image-upload-box" data-index="2" style="width:90px;height:90px;border:2px dashed #b48e8e;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;background:#faf6f6;overflow:hidden;">
+                            <span style="color:#b48e8e;font-size:2rem;">+</span>
+                            <input type="file" accept="image/*" id="editImageInput2" style="opacity:0;position:absolute;left:0;top:0;width:100%;height:100%;cursor:pointer;" />
+                            <img id="editImagePreview2" src="#" alt="Aperçu 3" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1;" />
+                            <button type="button" class="delete-btn" id="editDeleteBtn2" style="display:none;position:absolute;top:4px;right:4px;z-index:2;"><i class="fas fa-times"></i></button>
+                          </div>
+                          <div class="image-upload-box" data-index="3" style="width:90px;height:90px;border:2px dashed #b48e8e;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;background:#faf6f6;overflow:hidden;">
+                            <span style="color:#b48e8e;font-size:2rem;">+</span>
+                            <input type="file" accept="image/*" id="editImageInput3" style="opacity:0;position:absolute;left:0;top:0;width:100%;height:100%;cursor:pointer;" />
+                            <img id="editImagePreview3" src="#" alt="Aperçu 4" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1;" />
+                            <button type="button" class="delete-btn" id="editDeleteBtn3" style="display:none;position:absolute;top:4px;right:4px;z-index:2;"><i class="fas fa-times"></i></button>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductDescription">Description</label>
+                        <textarea id="editProductDescription" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button type="submit" class="btn-admin" style="flex: 1;">Enregistrer les modifications</button>
+                        <button type="button" class="btn-admin cancel-edit" style="flex: 1; background: var(--danger);">Annuler</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+      @keyframes slideInRight {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes slideOutRight {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script type="module" src="config.js"></script>
+    <script type="module" src="admin.js"></script>
+</body>
+</html> 
